@@ -49,7 +49,7 @@ __body2:
   %size21 = load i32* %size_entry_ptr20
   call void @oat_array_bounds_check( i32 %size21, i32 %_lhs17 )
   %index_ptr19 = getelementptr { i32, [ 0 x i32 ] }* %arr11, i32 0, i32 1, i32 %_lhs17
-  %_lhs23 = load { i32, [ 0 x i32 ] }*** %index_ptr19
+  %_lhs23 = load { i32, [ 0 x i32 ] }** %result18
   %bop24 = add i32 %_lhs16, %_lhs23
   store i32 %bop24, i32* %s12
   %_lhs25 = load i32* %i13

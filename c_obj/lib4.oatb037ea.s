@@ -29,15 +29,15 @@ __fresh7:
 _program:
 	pushl %ebp
 	movl %esp, %ebp
-	subl $96, %esp
+	subl $104, %esp
 __fresh4:
-	leal -96(%ebp), %eax
+	leal -104(%ebp), %eax
 	movl %eax, -28(%ebp)
 	movl 8(%ebp), %eax
 	movl %eax, %ecx
 	movl -28(%ebp), %eax
 	movl %ecx, (%eax)
-	leal -92(%ebp), %eax
+	leal -100(%ebp), %eax
 	movl %eax, -24(%ebp)
 	movl 12(%ebp), %eax
 	movl %eax, %ecx
@@ -56,19 +56,19 @@ __fresh4:
 	popl %eax
 	popl %ecx
 	popl %edx
-	leal -88(%ebp), %eax
+	leal -96(%ebp), %eax
 	movl %eax, -12(%ebp)
 	movl -16(%ebp), %eax
 	movl %eax, %ecx
 	movl -12(%ebp), %eax
 	movl %ecx, (%eax)
-	leal -84(%ebp), %eax
+	leal -92(%ebp), %eax
 	movl %eax, -8(%ebp)
 	movl $0, %eax
 	movl %eax, %ecx
 	movl -8(%ebp), %eax
 	movl %ecx, (%eax)
-	leal -80(%ebp), %eax
+	leal -88(%ebp), %eax
 	movl %eax, -4(%ebp)
 	movl $0, %eax
 	movl %eax, %ecx
@@ -94,22 +94,22 @@ __fresh5:
 __body2:
 	movl -8(%ebp), %eax
 	movl (%eax), %ecx
-	movl %ecx, -72(%ebp)
+	movl %ecx, -80(%ebp)
 	movl -4(%ebp), %eax
 	movl (%eax), %ecx
-	movl %ecx, -68(%ebp)
+	movl %ecx, -76(%ebp)
 	movl -12(%ebp), %eax
 	addl $0, %eax
-	movl %eax, -64(%ebp)
-	movl -64(%ebp), %eax
+	movl %eax, -72(%ebp)
+	movl -72(%ebp), %eax
 	movl (%eax), %ecx
-	movl %ecx, -60(%ebp)
+	movl %ecx, -68(%ebp)
 	pushl %edx
 	pushl %ecx
 	pushl %eax
-	movl -68(%ebp), %eax
+	movl -76(%ebp), %eax
 	pushl %eax
-	movl -60(%ebp), %eax
+	movl -68(%ebp), %eax
 	pushl %eax
 	call _oat_array_bounds_check
 	addl $8, %esp
@@ -119,14 +119,20 @@ __body2:
 	movl -12(%ebp), %eax
 	addl $4, %eax
 	movl %eax, %ecx
-	movl -68(%ebp), %eax
+	movl -76(%ebp), %eax
 	imull $4, %eax
 	addl %ecx, %eax
-	movl %eax, -56(%ebp)
+	movl %eax, -64(%ebp)
+	movl -64(%ebp), %eax
+	movl (%eax), %ecx
+	movl %ecx, -60(%ebp)
+	movl -64(%ebp), %eax
+	movl (%eax), %ecx
+	movl %ecx, -56(%ebp)
 	movl -56(%ebp), %eax
 	movl (%eax), %ecx
 	movl %ecx, -52(%ebp)
-	movl -72(%ebp), %eax
+	movl -80(%ebp), %eax
 	movl %eax, -48(%ebp)
 	movl -52(%ebp), %eax
 	movl %eax, %ecx
@@ -153,8 +159,8 @@ __fresh6:
 __post1:
 	movl -8(%ebp), %eax
 	movl (%eax), %ecx
-	movl %ecx, -76(%ebp)
-	movl -76(%ebp), %eax
+	movl %ecx, -84(%ebp)
+	movl -84(%ebp), %eax
 	movl %ebp, %esp
 	popl %ebp
 	ret
