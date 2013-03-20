@@ -332,7 +332,7 @@ and cmp_lhs (c:ctxt) (l:Range.t Ast.lhs) : operand * stream =
 			    end in
 			    let elt_ty = fst lop in
 			    let(result_id,result_op) = gen_local_op ( elt_ty) "result" in
-			    let(index_ptr_id,index_ptr_op) = gen_local_op (Ptr elt_ty) "index_ptr" in
+			    let(index_ptr_id,index_ptr_op) = gen_local_op ( elt_ty) "index_ptr" in
 			    let(size_entry_id, size_entry_op) = gen_local_op (Ptr I32) "size_entry_ptr" in
                             let (size_id, size_op) = (gen_local_op (I32) "size") in
 			    let (index_id,index_op) = (gen_local_op (I32) "int") in
