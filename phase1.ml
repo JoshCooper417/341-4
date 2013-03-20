@@ -328,16 +328,24 @@ and cmp_lhs (c:ctxt) (l:Range.t Ast.lhs) : operand * stream =
 			    let (lop, code2) = cmp_lhs c lhs in
 			    let dr_lop:operand =
 			    begin match lop with
-			      | ((Ptr t), y) -> (t,y)
+			      | ((Ptr t), y) ->(t,y)
 			    end in
-			    let elt_ty = fst lop in
-			    let(result_id,result_op) = gen_local_op ( elt_ty) "result" in
-			    let(index_ptr_id,index_ptr_op) = gen_local_op ( elt_ty) "index_ptr" in
+			   let elt_ty =
+			     begin match (fst dr_lop) with
+			      | Ptr (t)->begin match t with
+				  |Struct (h1::h2::t)->
+				    begin match h2 with
+				      |Array(_,array_type)->array_type
+				     end
+				  | t -> failwith ("This failing type is: "^(string_of_ty (t)))
+				    end
+			      | t -> failwith ("This type is: "^(string_of_ty (fst dr_lop)))
+			    end in
+			   print_string("\nelt_ty is:"^(string_of_ty(elt_ty))^"\n");
+			    let(index_ptr_id,index_ptr_op) = gen_local_op (Ptr elt_ty) "index_ptr" in
 			    let(size_entry_id, size_entry_op) = gen_local_op (Ptr I32) "size_entry_ptr" in
                             let (size_id, size_op) = (gen_local_op (I32) "size") in
-			    let (index_id,index_op) = (gen_local_op (I32) "int") in
-	     			     (index_ptr_op, ([(* I(Load(result_id, index_ptr_op)); *)
-			      I(Gep(index_ptr_id,dr_lop,(gep_array_index (eop)))); 
+	     			     (index_ptr_op, ([I(Gep(index_ptr_id,dr_lop,(gep_array_index (eop)))); 
 				     I(Call(None, oat_array_bounds_check_fn, [size_op; eop]));
 				     (I(Load(size_id, size_entry_op)));
 				     I(Gep(size_entry_id,dr_lop,gep_array_len))]
@@ -348,7 +356,8 @@ and cmp_lhs (c:ctxt) (l:Range.t Ast.lhs) : operand * stream =
 and cmp_lhs_exp c (l:Range.t Ast.lhs) : operand * stream =
   let (lhs_op, lhs_code) = cmp_lhs c l in
     begin match lhs_op with
-      | (Ptr t, _) -> let (ans_id, ans_op) = gen_local_op t "_lhs" in
+      | (Ptr t, _) ->print_string("\n\n\n This lhs is of type"^(string_of_ty t)^"\n");
+	let (ans_id, ans_op) = gen_local_op t "_lhs" in
 	    (ans_op, lhs_code >:: 
             (I(Load(ans_id, lhs_op))))
       | (t, _) ->

@@ -168,18 +168,14 @@ File "phase1.ml", line 277, characters 9-19:
 Warning 26: unused variable store_size.
 File "phase1.ml", line 271, characters 9-22:
 Warning 26: unused variable arr_op_ptr_id.
-File "phase1.ml", line 338, characters 21-29:
-Warning 26: unused variable index_op.
-File "phase1.ml", line 338, characters 12-20:
-Warning 26: unused variable index_id.
-File "phase1.ml", line 334, characters 21-30:
-Warning 26: unused variable result_op.
-File "phase1.ml", line 334, characters 11-20:
-Warning 26: unused variable result_id.
-File "phase1.ml", line 330, characters 7-71:
+File "phase1.ml", line 330, characters 7-70:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 ((Array (_, _)|Struct _|I32|I8|I1), _)
+File "phase1.ml", line 337, characters 8-83:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a value that is not matched:
+(Struct _|Ptr _|I32|I8|I1)
 File "phase1.ml", line 274, characters 7-8:
 Warning 11: this match case is unused.
 # Target: occ.cmx, tags: { compile, extension:cmx, extension:ml, file:occ.cmx, file:occ.ml, implem, native, ocaml, quiet }
@@ -199,5 +195,5 @@ Warning 11: this match case is unused.
 # Target: main.native, tags: { dont_link_with, extension:native, file:main.native, link, native, ocaml, program, quiet }
 /usr/local/bin/ocamlopt.opt unix.cmxa str.cmxa LibUtil.cmx Oconfig.cmx assert.cmx ast.cmx range.cmx parser.cmx lexer.cmx astlib.cmx x86.cmx ll.cmx ctxt.cmx cunit.cmx lllib.cmx tctxt.cmx tc.cmx phase1.cmx platform.cmx phase2.cmx occ.cmx gradedtests.cmx providedtests.cmx driver.cmx main.cmx -o main.native
 + /usr/local/bin/ocamlopt.opt unix.cmxa str.cmxa LibUtil.cmx Oconfig.cmx assert.cmx ast.cmx range.cmx parser.cmx lexer.cmx astlib.cmx x86.cmx ll.cmx ctxt.cmx cunit.cmx lllib.cmx tctxt.cmx tc.cmx phase1.cmx platform.cmx phase2.cmx occ.cmx gradedtests.cmx providedtests.cmx driver.cmx main.cmx -o main.native
-ld: warning: PIE disabled. Absolute addressing (perhaps -mdynamic-no-pic) not allowed in code signed PIE, but used in _caml_program from /var/folders/g5/jcg10xnn5k5c7rkmyhrbjv9m0000gn/T/camlstartup57d585.o. To fix this warning, don't compile with -mdynamic-no-pic or link with -Wl,-no_pie
+ld: warning: PIE disabled. Absolute addressing (perhaps -mdynamic-no-pic) not allowed in code signed PIE, but used in _caml_program from /var/folders/g5/jcg10xnn5k5c7rkmyhrbjv9m0000gn/T/camlstartup6afe3a.o. To fix this warning, don't compile with -mdynamic-no-pic or link with -Wl,-no_pie
 # Compilation successful.
