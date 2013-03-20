@@ -286,8 +286,8 @@ let compile_insn globals stack (i : Ll.insn) : X86.insn list =
 	       @push_args(* @[Mov(ebp, esp);Push(ebp)] *)@push_callee_save)
 
       (* Bitcast is effectively just a Mov at the assembly level *)
-      | Bitcast (i, op, _) ->(* [] *)
-[Mov(eax,eax);Mov(eax,eax);Mov(eax,eax);Mov(eax,eax);Mov(eax,eax);Mov(eax,eax);Mov(eax,eax);Mov(eax,eax)]
+      | Bitcast (i, op, _) ->failwith "unimplemented"(* [] *)
+(* [Mov(eax,eax);Mov(eax,eax);Mov(eax,eax);Mov(eax,eax);Mov(eax,eax);Mov(eax,eax);Mov(eax,eax);Mov(eax,eax)] *)
 	  
 (* failwith "unimplemented" *)
 
@@ -389,7 +389,7 @@ let compile_global (g : Ll.global) =
 (* Compile a top-level program by creating the globals map and then
 compiling the functions in that global context. *)
 let compile_prog (p:Ll.prog) : Cunit.cunit =
-  print_endline("program: \n"^Lllib.string_of_prog p);
+  (* print_endline("program: \n"^Lllib.string_of_prog p); *)
 Lllib.write_prog_to_file "run3-ll" p;
   let (globals_cu, globals) = List.split (List.map compile_global p.globals) in
   let functions_cu = List.map (compile_fdecl globals) p.functions in

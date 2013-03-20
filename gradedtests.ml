@@ -388,7 +388,7 @@ let my_tests : suite = [
  
 
   GradedTest("Easy tests", 10, [
-       ("run18", file_test "run18.oat" "" "-999");
+    ("lib4", file_test "lib4.oat" "" "532");
   ]);
 
 

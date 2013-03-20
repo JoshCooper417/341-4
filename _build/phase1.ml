@@ -322,22 +322,26 @@ and cmp_lhs (c:ctxt) (l:Range.t Ast.lhs) : operand * stream =
 		| None -> failwith (Printf.sprintf "Compiler error: cmp_lhs: variable %s not in the context" id)
 		| Some op -> (op, [])
 	      end
-	  | Some op -> (op, [])
+	  | Some op -> print_string("HERE\n\n\n\n");(op, [])
 	 end
     | Ast.Index(lhs,exp) -> let (eop, code1) = cmp_exp c exp in
 			    let (lop, code2) = cmp_lhs c lhs in
 			    let dr_lop:operand =
 			    begin match lop with
-			    | ((Ptr t), y) -> (t,y)
+			      | ((Ptr t), y) -> (t,y)
 			    end in
-
 			    let elt_ty = fst lop in
-			    let index_id = fst (gen_local_op (Ptr elt_ty) "index_ptr") in
-                            let (size_id, size_op) = (gen_local_op (I32) "size_ptr") in
-
-			    (lop, ([ I(Gep(index_id,dr_lop,(gep_array_index (eop)))); 
-				     I(Call(None, oat_array_bounds_check_fn, [size_op; eop])); 
-				     I(Gep(size_id,dr_lop,gep_array_len))]
+			    let(result_id,result_op) = gen_local_op ( elt_ty) "result" in
+			    let(index_ptr_id,index_ptr_op) = gen_local_op ( elt_ty) "index_ptr" in
+			    let(size_entry_id, size_entry_op) = gen_local_op (Ptr I32) "size_entry_ptr" in
+                            let (size_id, size_op) = (gen_local_op (I32) "size") in
+			    let (index_id,index_op) = (gen_local_op (I32) "int") in
+	     			     (result_op, ([I(Load(result_id, index_ptr_op));
+						   I(Load(index_id, index_ptr_op));
+			      I(Gep(index_ptr_id,dr_lop,(gep_array_index (eop)))); 
+				     I(Call(None, oat_array_bounds_check_fn, [size_op; eop]));
+				     (I(Load(size_id, size_entry_op)));
+				     I(Gep(size_entry_id,dr_lop,gep_array_len))]
 				     @code2@code1))     
 
 (* When we treat a left-hand-side as an expression yielding a value,
