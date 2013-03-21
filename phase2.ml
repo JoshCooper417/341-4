@@ -283,10 +283,10 @@ let compile_insn globals stack (i : Ll.insn) : X86.insn list =
 	end in
 	let clean_up =  [(* Pop(ebp); *)Add(esp,Imm (argsize))] in
       List.rev(pop_callee_save@clean_up@ret_insns@[Call(Lbl ("_"^fid))]
-	       @push_args(* @[Mov(ebp, esp);Push(ebp)] *)@push_callee_save)
+	       @push_args@push_callee_save)
 
       (* Bitcast is effectively just a Mov at the assembly level *)
-      | Bitcast (i, op, _) ->failwith "unimplemented"(* [] *)
+      | Bitcast (i, op, _) ->failwith "unimplemented-uses bitcast"(* [] *)
 (* [Mov(eax,eax);Mov(eax,eax);Mov(eax,eax);Mov(eax,eax);Mov(eax,eax);Mov(eax,eax);Mov(eax,eax);Mov(eax,eax)] *)
 	  
 (* failwith "unimplemented" *)

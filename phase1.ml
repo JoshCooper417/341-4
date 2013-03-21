@@ -267,17 +267,22 @@ let rec cmp_exp (c:ctxt) (exp:Range.t Ast.exp) : (operand * stream) =
 	end
 
   | Ast.New(elem_ty,e1,id,e2) -> let (size_exp_op, size_code) = cmp_exp c e1 in
+				 print_endline ("size_exp_op"^(Lllib.string_of_operand size_exp_op));
 				 let (arr_op, arr_code) = oat_alloc_array_dynamic elem_ty size_exp_op in
 				 let arr_op_ptr_id =
 				 begin match arr_op with
 				  |(arr_t, arr_id) -> arr_id
 				  |_ -> failwith "arr_op should be an operand"
 				 end in
-				 (* let arr_op_ptr = (Ptr(Ptr(cmp_ty elem_ty)), arr_op_ptr_id) in *)
+				
+				 (* let (arr_op_ptr_id, arr_op_ptr) =  gen_local_op  (Ptr) "array_ptr" in *)
+
 				 let store_size = cmp_array_update_static (Ast.TInt) (0) (arr_op) (size_exp_op) in
 				 let init_ind = i32_op_of_int 1 in
 				 let const_one = i32_op_of_int 1 in
+				 let const_zero = i32_op_of_int 0 in
 				 let (index_id, index_op) = gen_local_op (Ptr (cmp_ty elem_ty)) "index_ptr" in
+				 let (curr_ptr_id, curr_ptr_op) = gen_local_op (Ptr (cmp_ty elem_ty)) "index_ptr" in
 				 let (cmp_id, cmp_op) = gen_local_op (I1) "comparison_result" in
 			
 				 (* compile the function expresssion *)
@@ -287,7 +292,24 @@ let rec cmp_exp (c:ctxt) (exp:Range.t Ast.exp) : (operand * stream) =
 				 let compare_lbl = mk_lbl_hint "compare" in
 				 let body_lbl = mk_lbl_hint "body" in
 				 let end_lbl = mk_lbl_hint "end" in
-(arr_op, ([L(end_lbl);T(Br compare_lbl);I(Binop(index_id, Add,index_op, const_one))]@fn_code@[I(Load(parameter,index_op));(L(body_lbl));T(Cbr(cmp_op,body_lbl,end_lbl));I(Icmp(cmp_id,Slt,index_op,size_exp_op));(L(compare_lbl));T(Br compare_lbl);I(Store(init_ind, index_op))])@(arr_code)@(size_code))
+				 (arr_op, 
+				  ([L(end_lbl);
+				    T(Br compare_lbl);
+				    I(Binop(index_id, Add,index_op, const_one));
+
+				   I(Store(curr_ptr_op, param_op))]
+				   @fn_code@
+				   [I(Load(parameter,index_op));
+				    I(Gep(curr_ptr_id, arr_op,gep_array_index(index_op))); 
+				    (* I(Load(arr_op, arr_op)); *)
+				    (L(body_lbl));
+				    T(Cbr(cmp_op,body_lbl,end_lbl));
+				   I(Icmp(cmp_id,Slt,index_op,size_exp_op));
+				   (L(compare_lbl));
+
+				   T(Br compare_lbl);
+				   I(Store(init_ind, index_op))])
+				  @(arr_code)@(size_code))
 
 				 
 
@@ -322,35 +344,37 @@ and cmp_lhs (c:ctxt) (l:Range.t Ast.lhs) : operand * stream =
 		| None -> failwith (Printf.sprintf "Compiler error: cmp_lhs: variable %s not in the context" id)
 		| Some op -> (op, [])
 	      end
-	  | Some op -> print_string("HERE\n\n\n\n");(op, [])
+	  | Some op -> (op, [])
 	 end
     | Ast.Index(lhs,exp) -> let (eop, code1) = cmp_exp c exp in
 			    let (lop, code2) = cmp_lhs c lhs in
+			   (*  print_endline ("lop: "^(Lllib.string_of_operand lop)); *)
 			    let dr_lop:operand =
 			    begin match lop with
 			      | ((Ptr t), y) ->(t,y)
 			    end in
+			   (*  print_endline("dr_lop: "^(Lllib.string_of_operand dr_lop)); *)
 			   let elt_ty =
 			     begin match (fst dr_lop) with
 			      | Ptr (t)->begin match t with
-				  |Struct (h1::h2::t)->
-				    begin match h2 with
-				      |Array(_,array_type)->array_type
-				     end
-				  | t -> failwith ("This failing type is: "^(string_of_ty (t)))
-				    end
+			   	  |Struct (h1::h2::t)->
+			   	    begin match h2 with
+			   	      |Array(_,array_type)->array_type
+			   	     end
+			   	  | t -> failwith ("This failing type is: "^(string_of_ty (t)))
+			   	    end
 			      | t -> failwith ("This type is: "^(string_of_ty (fst dr_lop)))
 			    end in
-			   print_string("\nelt_ty is:"^(string_of_ty(elt_ty))^"\n");
+			   (* print_string("\nelt_ty is:"^(string_of_ty(elt_ty))^"\n"); *)
 			    let(index_ptr_id,index_ptr_op) = gen_local_op (Ptr elt_ty) "index_ptr" in
-			    let(size_entry_id, size_entry_op) = gen_local_op (Ptr I32) "size_entry_ptr" in
-                            let (size_id, size_op) = (gen_local_op (I32) "size") in
-	     			     (index_ptr_op, ([I(Gep(index_ptr_id,dr_lop,(gep_array_index (eop)))); 
-				     I(Call(None, oat_array_bounds_check_fn, [size_op; eop]));
-				     (I(Load(size_id, size_entry_op)));
-				     I(Gep(size_entry_id,dr_lop,gep_array_len))]
-				     @code2@code1))     
-
+			    (* let(size_entry_id, size_entry_op) = gen_local_op (Ptr I32) "size_entry_ptr" in *)
+                            (* let (size_id, size_op) = (gen_local_op (I32) "size") in *)
+			    let (size_op, size_code) = cmp_length_of_array c [Ast.Lhs lhs] in
+	     			     (index_ptr_op, 
+				     ([I(Gep(index_ptr_id,dr_lop,(gep_array_index (eop)))); 
+				      I(Call(None, oat_array_bounds_check_fn, [size_op; eop]))]	      
+				      @size_code@code2@code1))
+				       
 (* When we treat a left-hand-side as an expression yielding a value,
    we actually load from the resulting pointer. *)
 and cmp_lhs_exp c (l:Range.t Ast.lhs) : operand * stream =
@@ -599,7 +623,3 @@ let cmp_toplevel (p: Range.t Ast.prog) : Ll.prog =
       Ll.globals    = get_globals c;
       Ll.functions  = get_fdecls c;
     }
-
-
-
-    

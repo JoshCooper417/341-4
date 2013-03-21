@@ -164,36 +164,38 @@
 # Target: phase1.cmx, tags: { compile, extension:cmx, extension:ml, file:phase1.cmx, file:phase1.ml, implem, native, ocaml, quiet }
 /usr/local/bin/ocamlopt.opt -c -o phase1.cmx phase1.ml
 + /usr/local/bin/ocamlopt.opt -c -o phase1.cmx phase1.ml
-File "phase1.ml", line 277, characters 9-19:
+File "phase1.ml", line 283, characters 9-19:
+Warning 26: unused variable const_zero.
+File "phase1.ml", line 280, characters 9-19:
 Warning 26: unused variable store_size.
-File "phase1.ml", line 271, characters 9-22:
+File "phase1.ml", line 272, characters 9-22:
 Warning 26: unused variable arr_op_ptr_id.
-File "phase1.ml", line 330, characters 7-70:
+File "phase1.ml", line 353, characters 7-70:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 ((Array (_, _)|Struct _|I32|I8|I1), _)
-File "phase1.ml", line 337, characters 8-83:
+File "phase1.ml", line 361, characters 11-92:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Struct _|Ptr _|I32|I8|I1)
-File "phase1.ml", line 274, characters 7-8:
+File "phase1.ml", line 275, characters 7-8:
 Warning 11: this match case is unused.
 # Target: occ.cmx, tags: { compile, extension:cmx, extension:ml, file:occ.cmx, file:occ.ml, implem, native, ocaml, quiet }
-/usr/local/bin/ocamlopt.opt -c -o occ.cmx occ.ml # cached
-# Target: gradedtests.cmx, tags: { compile, extension:cmx, extension:ml, file:gradedtests.cmx, file:gradedtests.ml, implem, native, ocaml, quiet }
-/usr/local/bin/ocamlopt.opt -c -o gradedtests.cmx gradedtests.ml # cached
+/usr/local/bin/ocamlopt.opt -c -o occ.cmx occ.ml
 # Target: Oconfig.ml.depends, tags: { extension:ml, file:Oconfig.ml, ocaml, ocamldep, quiet }
 /usr/local/bin/ocamldep.opt -modules Oconfig.ml > Oconfig.ml.depends # cached
 # Target: Oconfig.cmx, tags: { compile, extension:cmx, extension:ml, file:Oconfig.cmx, file:Oconfig.ml, implem, native, ocaml, quiet }
 /usr/local/bin/ocamlopt.opt -c -o Oconfig.cmx Oconfig.ml # cached
 # Target: providedtests.cmx, tags: { compile, extension:cmx, extension:ml, file:providedtests.cmx, file:providedtests.ml, implem, native, ocaml, quiet }
 /usr/local/bin/ocamlopt.opt -c -o providedtests.cmx providedtests.ml # cached
+# Target: gradedtests.cmx, tags: { compile, extension:cmx, extension:ml, file:gradedtests.cmx, file:gradedtests.ml, implem, native, ocaml, quiet }
+/usr/local/bin/ocamlopt.opt -c -o gradedtests.cmx gradedtests.ml
 # Target: driver.cmx, tags: { compile, extension:cmx, extension:ml, file:driver.cmx, file:driver.ml, implem, native, ocaml, quiet }
-/usr/local/bin/ocamlopt.opt -c -o driver.cmx driver.ml # cached
+/usr/local/bin/ocamlopt.opt -c -o driver.cmx driver.ml
 # Target: main.cmx, tags: { compile, extension:cmx, extension:ml, file:main.cmx, file:main.ml, implem, native, ocaml, quiet }
-/usr/local/bin/ocamlopt.opt -c -o main.cmx main.ml # cached
+/usr/local/bin/ocamlopt.opt -c -o main.cmx main.ml
 # Target: main.native, tags: { dont_link_with, extension:native, file:main.native, link, native, ocaml, program, quiet }
 /usr/local/bin/ocamlopt.opt unix.cmxa str.cmxa LibUtil.cmx Oconfig.cmx assert.cmx ast.cmx range.cmx parser.cmx lexer.cmx astlib.cmx x86.cmx ll.cmx ctxt.cmx cunit.cmx lllib.cmx tctxt.cmx tc.cmx phase1.cmx platform.cmx phase2.cmx occ.cmx gradedtests.cmx providedtests.cmx driver.cmx main.cmx -o main.native
 + /usr/local/bin/ocamlopt.opt unix.cmxa str.cmxa LibUtil.cmx Oconfig.cmx assert.cmx ast.cmx range.cmx parser.cmx lexer.cmx astlib.cmx x86.cmx ll.cmx ctxt.cmx cunit.cmx lllib.cmx tctxt.cmx tc.cmx phase1.cmx platform.cmx phase2.cmx occ.cmx gradedtests.cmx providedtests.cmx driver.cmx main.cmx -o main.native
-ld: warning: PIE disabled. Absolute addressing (perhaps -mdynamic-no-pic) not allowed in code signed PIE, but used in _caml_program from /var/folders/g5/jcg10xnn5k5c7rkmyhrbjv9m0000gn/T/camlstartup6afe3a.o. To fix this warning, don't compile with -mdynamic-no-pic or link with -Wl,-no_pie
+ld: warning: PIE disabled. Absolute addressing (perhaps -mdynamic-no-pic) not allowed in code signed PIE, but used in _caml_program from /var/folders/g5/jcg10xnn5k5c7rkmyhrbjv9m0000gn/T/camlstartup6e2757.o. To fix this warning, don't compile with -mdynamic-no-pic or link with -Wl,-no_pie
 # Compilation successful.
